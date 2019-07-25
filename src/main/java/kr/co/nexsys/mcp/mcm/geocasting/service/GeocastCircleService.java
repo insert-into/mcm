@@ -1,6 +1,9 @@
 package kr.co.nexsys.mcp.mcm.geocasting.service;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +20,30 @@ import java.util.Optional;
 @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
 public class GeocastCircleService {
 
-  private final CoreTRDao coreTRDao;
+	private final CoreTRDao coreTRDao;
 
-  public GeocastCircleService(CoreTRDao coreTRDao){
-    this.coreTRDao = coreTRDao;
-  }
+	public GeocastCircleService(CoreTRDao coreTRDao) {
+		this.coreTRDao = coreTRDao;
+	}
 
-  @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-  public Optional<CoreTR> findCoreTR(int positionNo){
-   return coreTRDao.findById(positionNo).map(GeocastCircleService::valueOf);
-  }
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Optional<CoreTR> findCoreTR(int positionNo) {
+		return coreTRDao.findById(positionNo).map(GeocastCircleService::valueOf);
+	}
+
+	public List<CoreTRDvo> findByItemNameOrIdContainingCoreTRs(
+	double key1,
+	double key2,
+	double key3,
+	double key4
+	) {
+	  return ((List<CoreTRDvo>) coreTRDao.findByItemNameOrIdContainingCoreTRs(key1,key2,key3,key4));///findByLatGreaterThanEqual(key1));
+	}
+	
+	public List<CoreTRDvo> findByMrn(String key1) {
+		return ((List<CoreTRDvo>) coreTRDao.findByMrn(key1));
+	}
+
 
   public void updateTestData(List<Integer> positionNos, String testData){
     for(int positionNo : positionNos){

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: production
 
 mcm:
   server:
@@ -27,16 +27,16 @@ spring.profiles.include: testdb
 # production
 ---
 spring.profiles: production
-spring.profiles.include: testdb
+spring.profiles.include: mcm
 
 
 # datasource - testdb
 ---
-spring.profiles: testdb
+spring.profiles: mcm
 spring.profiles.include: sql-debug
 spring:
   flyway:
-    enabled: true
+    enabled: false
   jpa:
     show-sql: true
     hibernate:
@@ -44,9 +44,9 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/geokkurodb?useUnicode=yes&characterEncoding=UTF-8
-    username: geokkuro
-    password: geokkuro1234
+    url: jdbc:mysql://localhost:3306/mcm?useUnicode=yes&characterEncoding=UTF-8&serverTimezone=UTC
+    username: mcm
+    password: mcm$716
 
 # datasource - hsqldb
 ---

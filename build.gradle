@@ -22,6 +22,14 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-json
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: '2.1.6.RELEASE'
+	
+	// https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+	
+    
 
     runtimeOnly 'org.hsqldb:hsqldb'
     runtimeOnly 'mysql:mysql-connector-java'
