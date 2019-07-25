@@ -2,6 +2,7 @@ package kr.co.nexsys.mcp.mcm.server.geometric;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -35,7 +36,7 @@ public class GeoFencing implements Calculate {
 		this.cs = cs;
 	}
 
-	public List<CoreTRDvo> GeoFencingCalculation(ArrayList<Double> latiArray, ArrayList<Double> longiArray) {
+	public List<CoreTRDvo> GeoFencingCalculation(List<Double> latiArray, List<Double> longiArray) {
 		// Begin computations
 		long startTime = new Date().getTime();
 		long totalHullPoints = 0;
@@ -47,8 +48,8 @@ public class GeoFencing implements Calculate {
 			pointsRaw[h] = new Point2D.Double(x, y);
 		}
 
-		List<Point> pointList = new ArrayList<Point>();
-		List<Point> hullPoint = new ArrayList<Point>();
+		List<Point> pointList = Collections.synchronizedList(new ArrayList<Point>());
+		List<Point> hullPoint = Collections.synchronizedList(new ArrayList<Point>());
 		ConvexHull cvxHull = new ConvexHull();
 
 		for (int ii_ = 0; ii_ < pointsRaw.length; ii_++) {
@@ -84,8 +85,8 @@ public class GeoFencing implements Calculate {
 		minmaxPoints[3] = new Point2D.Double(x3, y3);
 
 		totalHullPoints += pointsRaw.length;
-
-		List<CoreTRDvo> trList = this.cs.findByItemNameOrIdContainingCoreTRs(
+		List<CoreTRDvo> trList = Collections.synchronizedList(new ArrayList<CoreTRDvo>());
+		trList = this.cs.findByItemNameOrIdContainingCoreTRs(
 				minmaxPoints[2].getY(),
 				minmaxPoints[0].getY(),
 				minmaxPoints[1].getX(),
@@ -100,7 +101,7 @@ public class GeoFencing implements Calculate {
 			double y = Double.parseDouble(trList.get(j).getLatitude().toString());
 			pointsRange[j] = new Point2D.Double(x, y);
 		}
-		List<Point> pointsRangeList = new ArrayList<Point>();
+		List<Point> pointsRangeList = Collections.synchronizedList(new ArrayList<Point>());
 		for (int ii = 0; ii < pointsRange.length; ii++) {
 			pointsRangeList.add(new Point(pointsRange[ii].getX(), pointsRange[ii].getY()));
 		}
@@ -112,7 +113,7 @@ public class GeoFencing implements Calculate {
 		log.debug("\r\rPolygon====== {}",(sA.length - 1));
 		int countTrue = 0;
 		
-		List<CoreTRDvo> vData = new ArrayList<CoreTRDvo>();
+		List<CoreTRDvo> vData = Collections.synchronizedList(new ArrayList<CoreTRDvo>());
 		vData.clear();
 		for (int ki = 0; ki < sARange.length; ki++) {
 			boolean check = Calculate.checkInside(h_p_11, sARange[ki].getX(), sARange[ki].getY());

@@ -3,6 +3,8 @@ package kr.co.nexsys.mcp.mcm.server.calc;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 public class CircleRangeCalculate {
 
 	public CircleRangeCalculate() {
@@ -19,7 +21,7 @@ public class CircleRangeCalculate {
 		concMap.put("maxLati" , (lati  + diffLatitude));
 		concMap.put("minLongi", (longi - diffLongitude));
 		concMap.put("maxLongi", (longi + diffLongitude));
-		System.out.println("range_cal_ result ....\n" + concMap);
+		log.warn("range_cal_ result ....\n" + concMap);
 		return concMap;
 	}
 

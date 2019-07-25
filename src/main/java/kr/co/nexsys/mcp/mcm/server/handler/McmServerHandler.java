@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collections;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -61,8 +62,8 @@ public class McmServerHandler extends ChannelInboundHandlerAdapter {
 			cMapRangeResult = crc.rangeCalculate(Double.parseDouble(msgMap.get("lat").toString()), Double.parseDouble(msgMap.get("long").toString()), Double.parseDouble(msgMap.get("radius").toString()));
 			
 			log.debug("circle range result... \n{}", cMapRangeResult);
-			
-			List<CoreTRDvo> trList = cs.findByItemNameOrIdContainingCoreTRs(
+			List<CoreTRDvo> trList = Collections.synchronizedList(new ArrayList<CoreTRDvo>());
+			trList = cs.findByItemNameOrIdContainingCoreTRs(
 					cMapRangeResult.get("minLati") ,
 					cMapRangeResult.get("maxLati") ,
 					cMapRangeResult.get("minLongi"),
@@ -88,13 +89,18 @@ public class McmServerHandler extends ChannelInboundHandlerAdapter {
 		if(1==mapType) {
 			log.debug("\r\r\rsrcMrn[{}]\rdstMrn[{}]\rlati--{}--\rlongi--{}--\r\r",msgMap.get("srcMRN"), msgMap.get("dstMRN"),msgMap.get("lat"), msgMap.get("long"));
 
-			ArrayList<Double> objLat = (ArrayList<Double>) msgMap.get("lat");
-			ArrayList<Double> objLon = (ArrayList<Double>) msgMap.get("long");
+			List<Double> objLat = Collections.synchronizedList(new ArrayList<Double>());
+			List<Double> objLon = Collections.synchronizedList(new ArrayList<Double>());
+			
+			objLat = (ArrayList<Double>) msgMap.get("lat");
+			objLon = (ArrayList<Double>) msgMap.get("long");
 			log.debug("\r\rlat classssssssssssssssssss {}",objLat.getClass());
 			
 			GeoFencing geoFenc = new GeoFencing(cs);
 			
-			List<CoreTRDvo> trList = geoFenc.GeoFencingCalculation(objLat, objLon);
+			List<CoreTRDvo> trList = Collections.synchronizedList(new ArrayList<CoreTRDvo>());
+			
+			trList = geoFenc.GeoFencingCalculation(objLat, objLon);
 			
 			int trSize = trList.size();
 			
@@ -113,9 +119,9 @@ public class McmServerHandler extends ChannelInboundHandlerAdapter {
 			}
 		}
 		if(2==mapType) {
-			log.debug("\r\r\rsrcMrn[{}]\rdstMrn[{}]\rip[{}]",msgMap.get("srcMRN"), msgMap.get("dstMRN"),msgMap.get("ip"));
-			
-			List<CoreTRDvo> trList = cs.findByMrn(dstMrn);
+			log.debug("\r\r\rsrcMrn[{}]\rdstMrn[{}]\rip[{}]",msgMap.get("srcMRN"), msgMap.get("dstMRN"),msgMap.get("IPAddr"));
+			List<CoreTRDvo> trList = Collections.synchronizedList(new ArrayList<CoreTRDvo>());
+			trList = cs.findByMrn(dstMrn);
 			int trSize = trList.size();
 			
 			if(trSize<1) {
