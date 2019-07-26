@@ -14,73 +14,74 @@ public class ConvexHull {
 	public static double minX = Double.MAX_VALUE;
 	public static double minY = Double.MAX_VALUE;
 	public static int minXi = Integer.MAX_VALUE;
-	public static int N;
-	public static List<Point> ps;
-	public static Stack<Point> s = new Stack<Point>();
+	public  int pointListSize;
+	public  List<Point> listPoint;
+	public static Stack<Point> pointStack = new Stack<Point>();
 	public static Point xx, yy;
+	
 
-	public List<Point> getConvexHull(List<Point> h) {
-		N = h.size();
-		ps = new ArrayList<Point>();
-		ps = h;
+	public List<Point> getConvexHull(List<Point> pList) {
+		pointListSize = pList.size();
+		listPoint = new ArrayList<Point>();
+		listPoint = pList;
 
-		for (int i = 0; i < N; i++) {
-			double px = ((Point) ps.get(i)).getX();
+		for (int i = 0; i < pointListSize; i++) {
+			double px = ((Point) pList.get(i)).getX();
 			if (minX > px) {
 				minX = px;
 				minXi = i;
 			}
 		}
-		Point minX_p = ps.get(minXi);
-		ps.remove(minXi);
-		Collections.sort(ps, new PointComp(minX_p));
-		s.add(ps.get(ps.size() - 1));
-		s.add(minX_p);
+		Point minXPoint = pList.get(minXi);
+		pList.remove(minXi);
+		Collections.sort(pList, new PointComp(minXPoint));
+		pointStack.add(pList.get(pList.size() - 1));
+		pointStack.add(minXPoint);
 
-		for (int i = 0; i < N - 1; i++) {
-			while (PointComp.calExpr(s.elementAt(s.size() - 2), s.lastElement(), ps.get(i)) <= 0) {
-				s.pop();
+		for (int i = 0; i < pointListSize - 1; i++) {
+			while (PointComp.calExpr(pointStack.elementAt(pointStack.size() - 2), pointStack.lastElement(), pList.get(i)) <= 0) {
+				pointStack.pop();
 			}
-			s.add(ps.get(i));
+			pointStack.add(pList.get(i));
 		}
 
-		double m_a = Double.MAX_VALUE;
-		double m_a1 = 0;// Double.MAX_VALUE;
+		double dblM = Double.MAX_VALUE;
+		double dblM1 = 0;// Double.MAX_VALUE;
 
-		for (int i = 0; i < s.size(); i++) {
-			double px = ((Point) s.get(i)).getX();
-			if (m_a1 < px) {
-				m_a1 = px;
+		for (int i = 0; i < pointStack.size(); i++) {
+			double px = ((Point) pointStack.get(i)).getX();
+			if (dblM1 < px) {
+				dblM1 = px;
 			}
 		}
-		for (int i = 0; i < s.size(); i++) {
-			double px = ((Point) s.get(i)).getX();
-			if (m_a > px) {
-				m_a = px;
+		for (int i = 0; i < pointStack.size(); i++) {
+			double px = ((Point) pointStack.get(i)).getX();
+			if (dblM > px) {
+				dblM = px;
 			}
 		}
-		Point minmin_p = new Point(m_a, m_a1);
+		Point minMinPoint = new Point(dblM, dblM1);
 
-		m_a = Double.MAX_VALUE;
-		m_a1 = 0;// Double.MAX_VALUE;
-		for (int i = 0; i < s.size(); i++) {
-			double py = ((Point) s.get(i)).getY();
-			if (m_a1 < py) {
-				m_a1 = py;
+		dblM = Double.MAX_VALUE;
+		dblM1 = 0;// Double.MAX_VALUE;
+		for (int i = 0; i < pointStack.size(); i++) {
+			double py = ((Point) pointStack.get(i)).getY();
+			if (dblM1 < py) {
+				dblM1 = py;
 			}
 		}
-		for (int i = 0; i < s.size(); i++) {
-			double py = ((Point) s.get(i)).getY();
-			if (m_a > py) {
-				m_a = py;
+		for (int i = 0; i < pointStack.size(); i++) {
+			double py = ((Point) pointStack.get(i)).getY();
+			if (dblM > py) {
+				dblM = py;
 			}
 		}
-		Point maxmax_p = new Point(m_a, m_a1);
-		xx = minmin_p;
-		yy = maxmax_p;
+		Point maxMaxPoint = new Point(dblM, dblM1);
+		xx = minMinPoint;
+		yy = maxMaxPoint;
 		minXi = Integer.MAX_VALUE;
 		minX = Double.MAX_VALUE;
-		return s;
+		return pointStack;
 	}
 
 	public Point getxxPoint() {
@@ -109,7 +110,7 @@ class PointComp implements Comparator<Point> {
 	@Override
 	public int compare(Point p1, Point p2) {
 		double d = calExpr(p1, minXi, p2);
-		if (d > 0 || ((d == 0) && getDistance(minXi, p1) > getDistance(minXi, p2)))
+		if (d > 0 || (d == 0) && getDistance(minXi, p1) > getDistance(minXi, p2))
 			return 1;
 		else
 			return -1;

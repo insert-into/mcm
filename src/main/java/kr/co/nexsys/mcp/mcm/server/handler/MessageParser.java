@@ -15,29 +15,44 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 public class MessageParser {
 	
+	/**
+	 * client에서 받은 message
+	 */
 	private String rcvMsg;
 	
+	/**
+	 * circle요청 json
+	 */
 	private Map<String, Object> circleMap ;
+	/**
+	 * polygon json
+	 */
 	private Map<String, Object> polygonMap;
+	/**
+	 * unicasting json
+	 */
 	private Map<String, Object> unicastMap;
 	
 	
 	MessageParser(String rcvMsg) {
 		
-		this.rcvMsg     = new String(rcvMsg);
-		this.circleMap  = new ConcurrentHashMap<String, Object>();
-		this.polygonMap = new ConcurrentHashMap<String, Object>();
-		this.unicastMap = new ConcurrentHashMap<String, Object>();
+		this.rcvMsg     = rcvMsg;
+		this.circleMap  = new ConcurrentHashMap<>();
+		this.polygonMap = new ConcurrentHashMap<>();
+		this.unicastMap = new ConcurrentHashMap<>();
 	}
 	
+	/**
+	 * circle?polygon?unicasting?
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getObjectType() {
-		Map<String, Object> returnMap = new ConcurrentHashMap<String, Object>();
+		Map<String, Object> returnMap = new ConcurrentHashMap<>();
 		JsonParser springParser = JsonParserFactory.getJsonParser();
-		Map<String, Object> map = new ConcurrentHashMap<String, Object>();
+		Map<String, Object> map = new ConcurrentHashMap<>();
 		
 		map = springParser.parseMap(this.rcvMsg);
-		
 		circleMap = (Map<String, Object>) map.get("geocasting_circle");
 		
 		polygonMap = (Map<String, Object>) map.get("geocasting_polygon");

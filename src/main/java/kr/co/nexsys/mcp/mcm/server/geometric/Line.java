@@ -21,9 +21,9 @@ public class Line {
 	}
 	public void lineView() {
 		System.out.print("[");
-		from.PointView();
+		from.pointView();
 		System.out.print("--> ");
-		to.PointView();
+		to.pointView();
 		System.out.println("]");
 	}
 }

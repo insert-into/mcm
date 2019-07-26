@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Random;
 import kr.co.nexsys.mcp.mcm.geocasting.dao.dvo.CoreTRDvo;
 import kr.co.nexsys.mcp.mcm.geocasting.service.GeocastCircleService;
-import kr.co.nexsys.mcp.mcm.server.geometric.Calculate;
+/*import kr.co.nexsys.mcp.mcm.server.geometric.Calculate;
 import kr.co.nexsys.mcp.mcm.server.geometric.ConvexHull;
 import kr.co.nexsys.mcp.mcm.server.geometric.Point;
-import kr.co.nexsys.mcp.mcm.server.geometric.Polygon;
+import kr.co.nexsys.mcp.mcm.server.geometric.Polygon;*/
 import kr.co.nexsys.mcp.mcm.server.grahamscan.convexhull.HullFrame;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +36,7 @@ public class GeoFencing implements Calculate {
 		this.cs = cs;
 	}
 
-	public List<CoreTRDvo> GeoFencingCalculation(List<Double> latiArray, List<Double> longiArray) {
+	public List<CoreTRDvo> geoFencingCalculation(List<Double> latiArray, List<Double> longiArray) {
 		// Begin computations
 		long startTime = new Date().getTime();
 		long totalHullPoints = 0;
@@ -52,8 +52,9 @@ public class GeoFencing implements Calculate {
 		List<Point> hullPoint = Collections.synchronizedList(new ArrayList<Point>());
 		ConvexHull cvxHull = new ConvexHull();
 
-		for (int ii_ = 0; ii_ < pointsRaw.length; ii_++) {
-			pointList.add(new Point(pointsRaw[ii_].getX(), pointsRaw[ii_].getY()));
+		final int pntRawLen = pointsRaw.length;
+		for (int ii = 0; ii < pntRawLen; ii++) {
+			pointList.add(new Point(pointsRaw[ii].getX(), pointsRaw[ii].getY()));
 		}
 		hullPoint = cvxHull.getConvexHull(pointList);
 
@@ -109,14 +110,14 @@ public class GeoFencing implements Calculate {
 		Point[] sARange = pointsRangeList.toArray(new Point[pointsRangeList.size()]);
 		pointsRangeList.clear();
 		Point[] sA = hullPoint.toArray(new Point[hullPoint.size()]);
-		Polygon h_p_11 = new Polygon(sA);
+		Polygon hPolygon = new Polygon(sA);
 		log.debug("\r\rPolygon====== {}",(sA.length - 1));
 		int countTrue = 0;
 		
 		List<CoreTRDvo> vData = Collections.synchronizedList(new ArrayList<CoreTRDvo>());
 		vData.clear();
 		for (int ki = 0; ki < sARange.length; ki++) {
-			boolean check = Calculate.checkInside(h_p_11, sARange[ki].getX(), sARange[ki].getY());
+			boolean check = Calculate.checkInside(hPolygon, sARange[ki].getX(), sARange[ki].getY());
 			if (check == true) {
 				log.debug("\rtr~~~~~~~~~~~~~~~~~~~{}\r",trList.get(ki));
 				vData.add(trList.get(ki));
@@ -127,8 +128,8 @@ public class GeoFencing implements Calculate {
 		log.debug("v_data.size == {}",vData.size());
 		log.debug("check_true = {}      check_false = {}   total_check = {}",
 				countTrue,
-				(sARange.length - countTrue),
-				(countTrue + sARange.length - countTrue)
+				sARange.length - countTrue,
+				countTrue + sARange.length - countTrue
 		);
 
 		hullPoint.clear();
@@ -137,8 +138,8 @@ public class GeoFencing implements Calculate {
 
 		// Calculate statistics
 		long duration = endTime - startTime;
-		double averageTime = ((double) duration);
-		double averageHullPoints = ((double) totalHullPoints);
+		double averageTime = (double) duration;
+		double averageHullPoints = (double) totalHullPoints;
 
 		// Print statistics to screen
 		log.debug("Total time elapsed: {} ms", duration);

@@ -58,7 +58,7 @@ public class McmServerHandler extends ChannelInboundHandlerAdapter {
 			log.debug("\r\r\r[srcMrn{}]\tdstMrn[{}]\tlati[{}]\tlongi[{}]\tradius[{}]",msgMap.get("srcMRN"), msgMap.get("dstMRN"),msgMap.get("lat"), msgMap.get("long"), msgMap.get("radius"));
 			CircleRangeCalculate crc = new CircleRangeCalculate();
 			
-			Map<String, Double> cMapRangeResult = new ConcurrentHashMap<String, Double>();
+			Map<String, Double> cMapRangeResult = new ConcurrentHashMap<>();
 			cMapRangeResult = crc.rangeCalculate(Double.parseDouble(msgMap.get("lat").toString()), Double.parseDouble(msgMap.get("long").toString()), Double.parseDouble(msgMap.get("radius").toString()));
 			
 			log.debug("circle range result... \n{}", cMapRangeResult);
@@ -100,7 +100,7 @@ public class McmServerHandler extends ChannelInboundHandlerAdapter {
 			
 			List<CoreTRDvo> trList = Collections.synchronizedList(new ArrayList<CoreTRDvo>());
 			
-			trList = geoFenc.GeoFencingCalculation(objLat, objLon);
+			trList = geoFenc.geoFencingCalculation(objLat, objLon);
 			
 			int trSize = trList.size();
 			
