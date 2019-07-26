@@ -33,9 +33,9 @@ public class McmServer  {
 			ServerBootstrap serverBootStrap = new ServerBootstrap();
 			serverBootStrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
 					.handler(new LoggingHandler(LogLevel.TRACE)).childHandler(new ChannelInitializer<SocketChannel>() {
-						///@Override
+						@Override
 						protected void initChannel(SocketChannel ch)
-						/// throws Exception
+						 throws Exception
 						{
 							ChannelPipeline pipeline = ch.pipeline();
 							pipeline.addLast(serviceHandler);
